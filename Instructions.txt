@@ -1,0 +1,7 @@
+Instructions 
+
+1) 'pip install venv'
+2) 'pip show venv' 
+3) Create a venv using 'pip -m venv <name>', -m implies in current directory, use 'venv' as name preferabbly
+4) activate the venv and install the external dependencies from 'requirements.txt'
+
