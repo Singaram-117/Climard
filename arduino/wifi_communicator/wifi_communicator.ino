@@ -1,13 +1,13 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <ESPAsyncWebSrv.h>
+#include <WebServer.h>
 
-const char* ssid = "your_SSID";
-const char* password = "your_PASSWORD";
+const char* ssid = "Bravo";
+const char* password = "bravo220";
 
-const char* serverName = "http://your_django_server_address/register_esp32/";
+const char* serverName = "http://127.0.0.1:8000//register_esp32/";
 
-AsyncWebServer server(80);
+WebServer server(80);
 
 const int ledPin = 2;  // Built-in LED pin
 
@@ -15,13 +15,12 @@ void setup() {
   Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
 
+  // Connect to Wi-Fi
   WiFi.begin(ssid, password);
-
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
-
   Serial.println("Connected to WiFi");
   Serial.println(WiFi.localIP());
 
@@ -48,19 +47,22 @@ void setup() {
     Serial.println("WiFi Disconnected");
   }
 
-  server.on("/led_on", HTTP_GET, [](AsyncWebServerRequest *request){
+  // Define routes
+  server.on("/led_on", []() {
     digitalWrite(ledPin, HIGH);
-    request->send(200, "text/plain", "LED is ON");
+    server.send(200, "text/plain", "LED is ON");
   });
 
-  server.on("/led_off", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/led_off", []() {
     digitalWrite(ledPin, LOW);
-    request->send(200, "text/plain", "LED is OFF");
+    server.send(200, "text/plain", "LED is OFF");
   });
 
+  // Start server
   server.begin();
 }
 
 void loop() {
-  // Nothing to do here
+  // Handle client requests
+  server.handleClient();
 }
