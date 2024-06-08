@@ -5,7 +5,8 @@
 const char* ssid = "Bravo";
 const char* password = "bravo220";
 
-const char* serverName = "http://127.0.0.1:8000//register_esp32/";
+// Replace with your server's IP address
+const char* serverName = "http://192.168.1.102:8000/register_esp32/";
 
 WebServer server(80);
 
@@ -22,7 +23,14 @@ void setup() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
+
+  // Print the IP address
+  Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+
+  // Print the MAC address
+  Serial.print("MAC Address: ");
+  Serial.println(WiFi.macAddress());
 
   // Register the ESP32 IP address with the Django server
   if (WiFi.status() == WL_CONNECTED) {
@@ -30,16 +38,20 @@ void setup() {
     http.begin(serverName);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    String postData = "ip=" + WiFi.localIP().toString();
+    String postData = "ip=" + WiFi.localIP().toString() + "&mac=" + WiFi.macAddress();
+    Serial.print("Post Data: ");
+    Serial.println(postData);
+
     int httpResponseCode = http.POST(postData);
 
     if (httpResponseCode > 0) {
       String response = http.getString();
       Serial.println(httpResponseCode);
-      Serial.println(response);
+      Serial.println("Server Response: " + response);  // Print the server response
     } else {
       Serial.print("Error on sending POST: ");
       Serial.println(httpResponseCode);
+      Serial.println(http.errorToString(httpResponseCode).c_str()); // Print detailed error
     }
 
     http.end();

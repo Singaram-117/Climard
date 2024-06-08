@@ -5,3 +5,10 @@ Instructions
 3) Create a venv using 'pip -m venv <name>', -m implies in current directory, use 'venv' as name preferabbly
 4) activate the venv and install the external dependencies from 'requirements.txt'
 
+Networking
+
+1) make sure the django is hosted in wild card or all interface address 0.0.0.0 
+so that it can listen to any device (in development).
+2) make sure to change the arduino url to point to the ip of the host machine.
+3) add the ip 0.0.0.0, currecnt ip of machine to allowed hosts in django.
+4) make sure to configure ssid and password in arduino to work.
