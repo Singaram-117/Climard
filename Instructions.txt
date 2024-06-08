@@ -12,3 +12,5 @@ so that it can listen to any device (in development).
 2) make sure to change the arduino url to point to the ip of the host machine.
 3) add the ip 0.0.0.0, currecnt ip of machine to allowed hosts in django.
 4) make sure to configure ssid and password in arduino to work.
+5) Most importantly Disable fire wall for python appplication networking or 
+In total diable the anti virus software 
