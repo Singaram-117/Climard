@@ -6,7 +6,7 @@ const char* ssid = "Bravo";
 const char* password = "bravo220";
 
 // Replace with your server's IP address
-const char* serverName = "http://192.168.1.102:8000/register_esp32/";
+const char* serverName = "http://192.168.1.101:8000/register_esp32/";
 
 WebServer server(80);
 
