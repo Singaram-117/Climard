@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 LED Control</title>
+    <script>
+        function sendRequest(action) {
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                    'action': action
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.status);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Control ESP32 LED</h1>
+    <button onclick="sendRequest('led_on')">Turn LED ON</button>
+    <button onclick="sendRequest('led_off')">Turn LED OFF</button>
+</body>
+</html>
