@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Threshold Values</title>
+    <link rel="icon" href="{% static 'icon.png' %}?vv=2" type="image/png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
@@ -16,20 +18,21 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
             background-color: black;
-            padding: 40px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            width: 100%;
+            width: 90%;
             text-align: center;
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 1.8em;
             color: #66ff99;
             margin-bottom: 20px;
         }
@@ -41,7 +44,7 @@
         }
 
         label {
-            font-size: 1.1em;
+            font-size: 1em;
             color: #66ff99;
             margin-bottom: 5px;
         }
@@ -53,7 +56,6 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
-            align-items: center;
         }
 
         button[type="submit"] {
@@ -68,11 +70,10 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             width: 100%;
-            align-items: center;
         }
 
         button[type="submit"]:hover {
-            background-color: #66ff99;
+            background-color: #4dbf4f;
             color: white;
         }
 
@@ -87,6 +88,24 @@
 
         .back-link:hover {
             color: white;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            input[type="number"] {
+                font-size: 0.9em;
+            }
+
+            button[type="submit"] {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>

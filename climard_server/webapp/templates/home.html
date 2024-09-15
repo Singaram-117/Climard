@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Update</title>
+    <link rel="icon" href="{% static 'icon.png' %}?v=2" type="image/png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -12,14 +13,14 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f0f0f0;
-            color:  white;
+            color: white;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             max-height: 100vh;
-            background-image: url('{% static "y.jpg" %}'); /* Update path to your image */
+            background-image: url('{% static "hd.jpg" %}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -27,12 +28,10 @@
         }
 
         header {
-            
             padding: 20px;
             background: rgba(0, 0, 0, 0.6);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             width: 97.4%;
-            
             text-align: center;
             margin-top: 0px;
             left: 0;
@@ -53,8 +52,8 @@
             gap: 1em;
         }
 
-        .hcont{
-            justify-content:center;
+        .hcont {
+            justify-content: center;
             margin-left: 42%;
         }
 
@@ -69,7 +68,7 @@
             backdrop-filter: blur(10px);
             margin-top: 10%;
             flex-grow: 1;
-            margin-bottom : 500px;
+            margin-bottom: 500px;
         }
 
         .btn {
@@ -83,7 +82,7 @@
             text-decoration: none;
             cursor: pointer;
             transition: background 0.3s ease;
-            margin_right: 10%;
+            margin-right: 10%;
         }
 
         .btn:hover {
@@ -124,6 +123,21 @@
             font-size: 1em;
             color: white;
             margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                width: 95%;
+                margin-top: 5%;
+            }
+            
+            .card {
+                width: 150px;
+            }
         }
     </style>
     <script>
@@ -173,38 +187,32 @@
 </head>
 <body>
     <header>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div class = 'hcont'>
-            <h1>Climard</h1>
-            <p id="real-time" class="real-time">Current Time IST :- -- : -- : --</p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="hcont">
+                <h1>Climard</h1>
+                <p id="real-time" class="real-time">Current Time IST :- -- : -- : --</p>
+            </div>
+            <div>
+                <a href="{% url 'admin_login' %}" class="btn">Admin Login</a>
+            </div>
         </div>
-        <div>
-            <a href="{% url 'admin_login' %}" class="btn">Admin Login</a>
-        </div>
-    </div>
-</header>
+    </header>
 
     <div class="container">
         <div class="sensor-data">
             <div class="card">
                 <p>Temperature ° C</p>
                 <p id="temperature">-- °C</p>
-        
-                
             </div>
             <div class="card">
                 <p>Humidity %</p>
                 <p id="humidity">-- %</p>
-                
             </div>
             <div class="card">
                 <p>LDR Value:</p>
                 <p id="ldr">--</p>
-                
             </div>
             <p class="last-updated ldr-updated">Last Updated: --</p>
-            
-            
         </div>
     </div>
 </body>

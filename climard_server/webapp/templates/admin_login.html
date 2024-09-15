@@ -1,11 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+    <link rel="icon" href="{% static 'icon.png' %}?v=2" type="image/png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        #message {
+            color : white;
+        }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -16,20 +23,21 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
-            background-color: black;
-            padding: 40px;
+            background-color:  black;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             max-width: 350px;
-            width: 100%;
+            width: 90%;
             text-align: center;
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 1.8em;
             color: #1a8cff;
             margin-bottom: 10px;
         }
@@ -41,7 +49,7 @@
         }
 
         label {
-            font-size: 1.2em;
+            font-size: 1em;
             color: #1a8cff;
             margin-bottom: 5px;
         }
@@ -54,12 +62,11 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
-            
         }
 
         button[type="submit"] {
             margin-top: 10px;
-            padding: 10px 0px;
+            padding: 10px 0;
             background-color: #1a8cff;
             color: white;
             border: none;
@@ -69,7 +76,6 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             width: 100%;
-            margin-bottom: 20px;
         }
 
         button[type="submit"]:hover {
@@ -95,6 +101,33 @@
             color: white;
             margin-bottom: 15px;
         }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            label {
+                font-size: 0.9em;
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                font-size: 0.9em;
+            }
+
+            button[type="submit"] {
+                font-size: 0.9em;
+            }
+
+            .admin-note {
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -104,7 +137,7 @@
         {% if messages %}
             <ul>
                 {% for message in messages %}
-                    <li>{{ message }}</li>
+                    <li id="message">{{message}}</li>
                 {% endfor %}
             </ul>
         {% endif %}

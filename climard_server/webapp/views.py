@@ -1,45 +1,22 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 import requests
 import logging
 import json
+
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse, HttpResponseRedirect
+from django.conf import settings
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 
 logger = logging.getLogger(__name__)
-
-ESP32_IP = None
-
-@csrf_exempt
-def register_esp32(request):
-    global ESP32_IP
-    if request.method == 'POST':
-        print("came")
-        ESP32_IP = request.POST.get('ip')
-        mac_address = request.POST.get('mac')
-        logger.info(f"Received IP: {ESP32_IP}, MAC: {mac_address}")
-        return JsonResponse({'status': 'IP registered', 'ip': ESP32_IP, 'mac': mac_address})
-    return JsonResponse({'status': 'failed'})
-
-def get_esp32_ip(request):
-    global ESP32_IP
-    if ESP32_IP:
-        return JsonResponse({'status': 'success', 'ip': ESP32_IP})
-    return JsonResponse({'status': 'fail', 'message': 'ESP32 IP not registered'})
-
-def led(request):
-    global ESP32_IP
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        if ESP32_IP:
-            if action == 'led_on':
-                response = requests.get(f"http://{ESP32_IP}/led_on")
-            elif action == 'led_off':
-                response = requests.get(f"http://{ESP32_IP}/led_off")
-            return JsonResponse({'status': response.text})
-        else:
-            return JsonResponse({'status': 'ESP32 IP not registered'})
-    return render(request, 'led.html')
 
 
 # Global variable to store the latest sensor data
@@ -80,16 +57,6 @@ def get_sensor_data(request):
     global latest_sensor_data
     return JsonResponse({'status': 'success', 'data': latest_sensor_data})
 
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.http import JsonResponse, HttpResponseRedirect
-from django.conf import settings
-from django.core.mail import send_mail
 
 # Default threshold values
 TEMP_THRESHOLD = 37.0
@@ -134,3 +101,4 @@ def get_thresholds(request):
         'temp_threshold': TEMP_THRESHOLD,
         'ldr_threshold': LDR_THRESHOLD
     })
+

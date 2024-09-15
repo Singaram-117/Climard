@@ -1,0 +1,8 @@
+Pin	Terminal device	color
+3v3	board +ve	red
+GND	board grd	black
+		
+VN	LDR +ve	
+D4	DHT 11	
+D12	Yellow Led	
+D14	Blue Led	
