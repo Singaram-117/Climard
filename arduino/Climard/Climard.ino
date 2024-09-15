@@ -19,9 +19,11 @@ const char* baseURL = "http://192.168.0.103:8000/api/";
 const char* receiveDataEndpoint = "receive_data/";
 const char* getThresholdsEndpoint = "get_thresholds/";
 
-const char* ssidList[] = {"UpStream", "Redmi K20", "SSN"};
-const char* passwordList[] = {"upstream7", "hellomeow", "Ssn1!Som2@Sase3#"};
+const char* ssidList[] = {"UpStream", "SSN", "Redmi K20", "Athithya"};
+const char* passwordList[] = {"upstream7", "Ssn1!Som2@Sase3#", "hellomeow", "dadisgod"};
 const int numWiFiNetworks = sizeof(ssidList) / sizeof(ssidList[0]);
+
+HTTPClient http;
 
 void setup() {
   Serial.begin(115200);
@@ -39,25 +41,24 @@ void setup() {
 }
 
 void loop() {
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
-  int ldrValue = analogRead(LDRPIN);
 
-  if (!isnan(humidity) && !isnan(temperature)) {
-    if (sendSensorData(temperature, humidity, ldrValue)) {
-      getThresholds();  // Fetch thresholds from the server
-      controlLEDs(temperature, ldrValue);
-    } else {
-      handleLED(2);  // Blink LED if unable to communicate
+    float humidity = dht.readHumidity();
+    float temperature = dht.readTemperature();
+    int ldrValue = analogRead(LDRPIN);
+
+    if (!isnan(humidity) && !isnan(temperature)) {
+      if (sendSensorData(temperature, humidity, ldrValue)) {
+        getThresholds();  // Fetch thresholds from the server
+        controlLEDs(temperature, ldrValue);
+      } else {
+        handleLED(2);  // Blink LED if unable to communicate
+      }
     }
-  }
-
   delay(100); // Delay before next loop iteration
 }
 
 bool sendSensorData(float temperature, float humidity, int ldrValue) {
   if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
     String url = String(baseURL) + receiveDataEndpoint;
     http.begin(url);
 
@@ -132,7 +133,7 @@ void checkWiFiConnection() {
       WiFi.begin(ssidList[i], passwordList[i]);
 
       int attempt = 0;
-      while (WiFi.status() != WL_CONNECTED && attempt < 20) {
+      while (WiFi.status() != WL_CONNECTED && attempt <= 7) {
         delay(100);
         Serial.print(".");
         attempt++;
@@ -140,7 +141,6 @@ void checkWiFiConnection() {
 
       if (WiFi.status() == WL_CONNECTED) {
         Serial.println("\nConnected to WiFi!");
-        handleLED(1);  // Turn LED on when connected
         return;
       }
     }
@@ -157,8 +157,7 @@ void handleLED(int state) {
     digitalWrite(LED_PIN, HIGH);
   } else if (state == 2) {
     digitalWrite(LED_PIN, HIGH);
-    delay(200);
+    delay(100);
     digitalWrite(LED_PIN, LOW);
-    delay(200);
   }
 }

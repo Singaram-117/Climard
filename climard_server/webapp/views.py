@@ -101,6 +101,6 @@ def custom_admin_login(request):
 
 
 def get_time():
-    current_time = datetime.now().strftime("%H:%M:%S")
+    current_time = datetime.now().strftime("%H:%M:%S (%y-%m-%d)")  # Return both date and time
     return current_time
 

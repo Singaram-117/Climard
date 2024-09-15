@@ -131,6 +131,16 @@
             color: white;
             margin-top: 5px;
         }
+        .move-right {
+            padding-left: 0;
+        }
+
+        /* Styles for larger screens */
+        @media (min-width: 600px) {
+            .move-right {
+                padding-left: 180px; /* Adjust as needed */
+            }
+        }
 
         @media (max-width: 768px) {
             header {
@@ -182,19 +192,18 @@
             function fetchSensorData() {
                 $.ajax({
                     url: '/get_sensor_data/',
-                    type: 'GET',
                     success: function(response) {
-                        if (response.status === 'success') {
-                            // Update the HTML elements with the latest sensor data
-                            $('#temperature').text(response.data.temperature);
-                            $('#humidity').text(response.data.humidity);
-                            $('#ldr').text(response.data.ldr);
-                            $('.temperature-updated').text(`Last Updated: ${response.data.timestamp}`);
-                            $('.humidity-updated').text(`Last Updated: ${response.data.timestamp}`);
-                            $('.ldr-updated').text(`Last Updated: ${response.data.timestamp}`);
-                        } else {
-                            console.log('Failed to fetch sensor data');
-                        }
+                    if (response.status === 'success') {
+                        $('#temperature').text(response.data.temperature);
+                        $('#humidity').text(response.data.humidity);
+                        $('#ldr').text(response.data.ldr);
+                        // Update with both date and time
+                        $('.temperature-updated').text(`Last Updated: ${response.data.timestamp}`);
+                        $('.humidity-updated').text(`Last Updated: ${response.data.timestamp}`);
+                        $('.ldr-updated').text(`Last Updated: ${response.data.timestamp}`);
+                    } else {
+                        console.log('Failed to fetch sensor data');
+                    }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
@@ -224,8 +233,8 @@
 <body>
     <header>
         <div class="hcont">
-            <h1>Climard</h1>
-            <p id="real-time" class="real-time">Current Time IST :- -- : -- : --</p>
+            <h1 class="move-right">Climard</h1>
+            <p id="real-time" class="real-time move-right">Current Time IST :- -- : -- : --</p>
         </div>
         <div class="btn-container">
             <a href="{% url 'admin_login' %}" target="_blank" class="btn">Admin Login</a>
