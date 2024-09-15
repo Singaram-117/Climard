@@ -1,80 +1,100 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <WebServer.h>
 
-const char* ssid = "Bravo";
-const char* password = "bravo220";
+const int LED_PIN = 2;  // Built-in LED pin
+const char* ssidList[] = {"UpStream", "Redmi K20"};  // List of SSIDs
+const char* passwordList[] = {"upstream7", "hellomeow"};  // Corresponding passwords
+const int numWiFiNetworks = sizeof(ssidList) / sizeof(ssidList[0]);  // Number of WiFi networks
 
-// Replace with your server's IP address
-const char* serverName = "http://192.168.1.101:8000/register_esp32/";
+const char* serverURL = "https://singaram.pythonanywhere.com";  // HTTP request URL
 
-WebServer server(80);
-
-const int ledPin = 2;  // Built-in LED pin
+// Function to handle LED states
+void handleLED(int state) {
+  if (state == 0) {
+    digitalWrite(LED_PIN, LOW);  // Turn LED off
+  } else if (state == 1) {
+    digitalWrite(LED_PIN, HIGH);  // Turn LED on
+  } else if (state == 2) {
+    // Blink LED continuously
+    digitalWrite(LED_PIN, HIGH);
+    delay(200);
+    digitalWrite(LED_PIN, LOW);
+    delay(200);
+  }
+}
 
 void setup() {
-  Serial.begin(115200);
-  pinMode(ledPin, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);  // Set LED pin as output
+  handleLED(0);  // Turn LED off initially
+  Serial.begin(115200);      // Start serial communication
+  WiFi.mode(WIFI_STA);       // Set ESP32 to station mode
+}
 
-  // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
+void tryWiFiConnection() {
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
+    Serial.println("Attempting to connect to WiFi...");
+    
+    // Iterate through all SSIDs
+    for (int i = 0; i < numWiFiNetworks; i++) {
+      WiFi.begin(ssidList[i], passwordList[i]);
+
+      // Wait for connection with timeout
+      int attempt = 0;
+      while (WiFi.status() != WL_CONNECTED && attempt < 20) {
+        handleLED(0);  // LED off while trying
+        delay(200);
+        Serial.print(".");
+        attempt++;
+      }
+
+      if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("\nConnected to WiFi!");
+        return;  // Exit if connected
+      }
+    }
+    
+    // Retry if not connected
+    Serial.println("\nFailed to connect, retrying...");
+    delay(200);  // Retry every 0.2 seconds
   }
-  Serial.println("Connected to WiFi");
+}
 
-  // Print the IP address
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+void tryHttpRequest() {
+  HTTPClient http;
+  bool requestSuccessful = false;
 
-  // Print the MAC address
-  Serial.print("MAC Address: ");
-  Serial.println(WiFi.macAddress());
+  while (WiFi.status() == WL_CONNECTED) {  // Check if connected to WiFi
+    handleLED(2);  // Blink LED while attempting request
+    Serial.println("Sending HTTP request...");
 
-  // Register the ESP32 IP address with the Django server
-  if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-    http.begin(serverName);
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    http.begin(serverURL);  // Specify the URL
+    int httpCode = http.GET();  // Send the request
 
-    String postData = "ip=" + WiFi.localIP().toString() + "&mac=" + WiFi.macAddress();
-    Serial.print("Post Data: ");
-    Serial.println(postData);
-
-    int httpResponseCode = http.POST(postData);
-
-    if (httpResponseCode > 0) {
-      String response = http.getString();
-      Serial.println(httpResponseCode);
-      Serial.println("Server Response: " + response);  // Print the server response
+    if (httpCode == 200) {  // If HTTP response is OK
+      Serial.println("HTTP request successful!");
+      handleLED(1);  // Turn LED on
+      requestSuccessful = true;
     } else {
-      Serial.print("Error on sending POST: ");
-      Serial.println(httpResponseCode);
-      Serial.println(http.errorToString(httpResponseCode).c_str()); // Print detailed error
+      Serial.printf("Failed HTTP request, Code: %d\n", httpCode);
     }
 
-    http.end();
-  } else {
-    Serial.println("WiFi Disconnected");
+    http.end();  // Close connection
+
+    if (requestSuccessful) {
+      return;  // Stop further processing
+    }
+    // Retry after some delay if request failed
+    delay(200);
   }
-
-  // Define routes
-  server.on("/led_on", []() {
-    digitalWrite(ledPin, HIGH);
-    server.send(200, "text/plain", "LED is ON");
-  });
-
-  server.on("/led_off", []() {
-    digitalWrite(ledPin, LOW);
-    server.send(200, "text/plain", "LED is OFF");
-  });
-
-  // Start server
-  server.begin();
 }
 
 void loop() {
-  // Handle client requests
-  server.handleClient();
+  // Check if connected to WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    handleLED(0);  // Turn LED off when disconnected
+    tryWiFiConnection();  // Try to reconnect to WiFi
+    if (WiFi.status() == WL_CONNECTED) {
+      tryHttpRequest();  // Try HTTP request if connected
+    }
+  }
 }

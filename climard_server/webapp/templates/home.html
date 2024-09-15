@@ -8,7 +8,7 @@
     <link rel="icon" href="{% static 'icon.png' %}?v=2" type="image/png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -31,12 +31,21 @@
             padding: 20px;
             background: rgba(0, 0, 0, 0.6);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            width: 97.4%;
+            width: 100%;
             text-align: center;
             margin-top: 0px;
-            left: 0;
-            right: 0;
             backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        header .hcont {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: calc(100% - 200px); /* Adjust width to make space for the button */
         }
 
         header h1 {
@@ -49,12 +58,11 @@
             font-size: 1.2em;
             margin-top: 10px;
             color: white;
-            gap: 1em;
         }
 
-        .hcont {
-            justify-content: center;
-            margin-left: 42%;
+        header .btn-container {
+            margin-left: auto;
+            margin-right: 20px; /* Gap from the right edge */
         }
 
         .container {
@@ -82,7 +90,6 @@
             text-decoration: none;
             cursor: pointer;
             transition: background 0.3s ease;
-            margin-right: 10%;
         }
 
         .btn:hover {
@@ -126,17 +133,46 @@
         }
 
         @media (max-width: 768px) {
+            header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: center;
+                position: static;
+                text-align: center;
+            }
+
+            header .btn-container {
+                margin: 10px auto 0;
+                order: 2; /* Ensures button is below the time */
+            }
+
+            header .hcont {
+                margin-bottom: 10px;
+            }
+
             header h1 {
-                font-size: 2em;
+                font-size: 1.8em;
             }
-            
-            .container {
-                width: 95%;
-                margin-top: 5%;
+
+            header .real-time {
+                font-size: 1em;
+                margin: 0;
             }
-            
-            .card {
-                width: 150px;
+
+            .btn {
+                margin: 0;
+                width: fit-content; /* Ensure the button fits content */
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            header .real-time {
+                font-size: 0.9em;
             }
         }
     </style>
@@ -187,14 +223,12 @@
 </head>
 <body>
     <header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="hcont">
-                <h1>Climard</h1>
-                <p id="real-time" class="real-time">Current Time IST :- -- : -- : --</p>
-            </div>
-            <div>
-                <a href="{% url 'admin_login' %}" class="btn">Admin Login</a>
-            </div>
+        <div class="hcont">
+            <h1>Climard</h1>
+            <p id="real-time" class="real-time">Current Time IST :- -- : -- : --</p>
+        </div>
+        <div class="btn-container">
+            <a href="{% url 'admin_login' %}" target="_blank" class="btn">Admin Login</a>
         </div>
     </header>
 

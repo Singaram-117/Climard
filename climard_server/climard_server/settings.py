@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-tz076gg9tr)m%%38xwvaa-^c%b*2zz8yunj@j=1d(potrs%9&j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.100', 'climard.com', '0.0.0.0', '192.168.1.102','192.168.1.101','127.0.0.1','192.168.1.100',
-                 '192.168.170.6', '192.168.161.6']
+ALLOWED_HOSTS = ['192.168.0.103', '127.0.0.1']
 
 
 # Application definition
@@ -39,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
     'webapp'
 ]
 
@@ -50,7 +51,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'climard_server.urls'
 
